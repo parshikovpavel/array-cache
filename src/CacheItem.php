@@ -2,6 +2,7 @@
 
 namespace ppCache;
 
+use DateTime;
 use DateTimeInterface;
 use Psr\Cache\CacheItemInterface;
 
@@ -54,12 +55,49 @@ final class CacheItem implements CacheItemInterface
      */
     public function get()
     {
-        if ($this->isHit()) {
-            return $this->value;
-        }
-        else {
-            return null;
-        }
+        return $this->isHit() ? $this->value : null;
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function isHit(): bool
+    {
+        $this->isHit;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function set($value): self
+    {
+        $this->value = $value;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function expiresAt($expiration): self
+    {
+        $this->expiration = ($expiration instanceof DateTimeInterface) ? $expiration : null;
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function expiresAfter($time): self
+    {
+        if ($time instanceof \DateInterval) {
+            $expiration = new DateTime();
+            $expiration->add($time);
+            $this->expiration = $expiration;
+        } elseif (is_numeric($time)) {
+            $expires = new DateTime('now +' . $time . ' seconds');
+            $this->expiration = $expires;
+        } else {
+            $this->expiration = null;
+        }
+    }
 }
