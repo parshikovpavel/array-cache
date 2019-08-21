@@ -2,6 +2,7 @@
 
 namespace ppCache;
 
+use Exception;
 use DateTime;
 use DateTimeInterface;
 use Psr\Cache\CacheItemInterface;
@@ -19,27 +20,25 @@ final class CacheItem implements CacheItemInterface
     /**
      * @var mixed Data of some serializable PHP data type
      */
-    private $value;
+    private $value = null;
 
     /**
      * @var DateTimeInterface The time when an item is set to go stale
      */
-    private $expiration;
+    private $expiration = null;
 
     /**
      * @var bool An item is found and has not expired
      */
-    private $isHit;
+    private $isHit = false;
 
     /**
      * CacheItem construct
      * @param string $key
-     * @param bool $isHit
      */
-    public function __construct(string $key, bool $isHit = false)
+    public function __construct(string $key)
     {
         $this->key = $key;
-        $this->isHit = $isHit;
     }
 
     /**
@@ -63,7 +62,7 @@ final class CacheItem implements CacheItemInterface
      */
     public function isHit(): bool
     {
-        $this->isHit;
+        return $this->isHit;
     }
 
     /**
@@ -99,5 +98,27 @@ final class CacheItem implements CacheItemInterface
         } else {
             $this->expiration = null;
         }
+    }
+
+    /**
+     * Sets that there is a cache hit
+     */
+    public function setHit(): void
+    {
+        $this->isHit = true;
+    }
+
+    /**
+     * Checks that an item has expired
+     * @return bool True - if item has expired, false - otherwise
+     * @throws Exception Thrown by the Datetime class
+     */
+    public function isExpired(): bool
+    {
+        if (null === $this->expiration || new DateTime() < $this->expiration) {
+            return false;
+        }
+
+        return true;
     }
 }
