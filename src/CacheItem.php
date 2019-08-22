@@ -70,7 +70,7 @@ final class CacheItem implements CacheItemInterface
      */
     public function set($value): self
     {
-        $this->value = $value;
+        $this->value = is_object($value) ? clone $value : $value;
         return $this;
     }
 
@@ -98,6 +98,8 @@ final class CacheItem implements CacheItemInterface
         } else {
             $this->expiration = null;
         }
+
+        return $this;
     }
 
     /**
