@@ -41,6 +41,7 @@ final class CacheTest extends TestCase
 
 ### Get value from cache
 
+
 First try to get value from cache by `$key`. 
 * If trying is successful, return `$value`
 * otherwise compute `$value` by calling the time-consuming `compute()` function and cache the
@@ -63,13 +64,13 @@ final class CacheTest extends TestCase
         return $item->get();
     }
 }
-``` 
+```
 
 # Unit testing
 
 There are unit tests in the `./test` directory. You can run all tests with the following command:
 
-```bssh
+```bash
 $ ./vendor/bin/phpunit tests/ --testdox
 
 ppCache\CacheItemPool
