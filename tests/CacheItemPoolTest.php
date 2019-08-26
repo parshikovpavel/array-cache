@@ -45,7 +45,7 @@ final class CacheItemPoolTest extends TestCase
         $this->assertSame($value, $cacheItem->get());
     }
 
-    public function testDetectsExpiredAnItem(): void
+    public function testDetectsAnExpiredItem(): void
     {
         $key = 'new_item';
         $value = 'item_value';
