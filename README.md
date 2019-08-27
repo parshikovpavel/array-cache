@@ -2,6 +2,18 @@ The package for caching data in memory using a PHP array.
 
 As cached data is only available in the current request the package should be used for mocking the original cache in tests.
 
+The cache implementation is compatible with [PSR-6](https://www.php-fig.org/psr/psr-6/)/[PSR-16](https://www.php-fig.org/psr/psr-16/). 
+In addition, `CounterInterface` ([excluded](https://github.com/php-fig/fig-standards/pull/847/) from PSR-16) is included in the library and used for implementation.
+
+Below the table matching the library classes with the implemented interfaces.
+
+| PSR | Class | Implements |
+| --- | --- | --- |
+| [PSR-6](https://www.php-fig.org/psr/psr-6/) | `CacheItemPool` | `CacheItemPoolInterface` |
+| [PSR-6](https://www.php-fig.org/psr/psr-6/) | `CacheItem`     | `CacheItemInterface` |
+| [PSR-16](https://www.php-fig.org/psr/psr-16/) | `Cache` | `CacheInterface` |
+| [PSR-16](https://www.php-fig.org/psr/psr-6/) + [excluded](https://github.com/php-fig/fig-standards/pull/847/)&nbsp;`CounterInterface` | `CountingCache` | `CacheInterface` + `CounterInterface` |
+
 # Installation
 
 The recommended method of installing is via Composer.
@@ -40,7 +52,6 @@ final class CacheTest extends TestCase
 ```
 
 ### Get value from cache
-
 
 First try to get value from cache by `$key`. 
 * If trying is successful, return `$value`
