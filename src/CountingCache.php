@@ -4,24 +4,21 @@ namespace ppCache;
 
 use Psr\SimpleCache\CacheInterface;
 
-/**
- * @inheritDoc
- */
-final class Cache implements CacheInterface
+final class CountingCache implements CacheInterface, CounterInterface
 {
     /**
-     * @var Psr6ToPsr16Adapter The adapter that decorates a PSR-6 pool and converts it to a PSR-16 simple cache interface
+     * @var Cache The simple cache instance
      */
-    private $adapter;
+    private $cache;
 
     /**
      * Cache constructor
      */
     public function __construct()
     {
-        $pool = new CacheItemPool();
+        $pool = new Cache();
 
-        $this->adapter = new Psr6ToPsr16Adapter($pool);
+        $this->cache = new Cache($pool);
     }
 
     /**
@@ -29,7 +26,7 @@ final class Cache implements CacheInterface
      */
     public function get($key, $default = null)
     {
-        return $this->adapter->get($key, $default);
+        return $this->cache->get($key, $default);
     }
 
     /**
@@ -37,7 +34,7 @@ final class Cache implements CacheInterface
      */
     public function set($key, $value, $ttl = null): bool
     {
-        return $this->adapter->set($key, $value, $ttl);
+        return $this->cache->set($key, $value, $ttl);
     }
 
     /**
@@ -45,7 +42,7 @@ final class Cache implements CacheInterface
      */
     public function delete($key): bool
     {
-        return $this->adapter->delete($key);
+        return $this->cache->delete($key);
     }
 
     /**
@@ -53,7 +50,7 @@ final class Cache implements CacheInterface
      */
     public function clear(): bool
     {
-        return $this->adapter->clear();
+        return $this->cache->clear();
     }
 
     /**
@@ -61,7 +58,7 @@ final class Cache implements CacheInterface
      */
     public function getMultiple($keys, $default = null): array
     {
-        return $this->adapter->getMultiple($keys, $default);
+        return $this->cache->getMultiple($keys, $default);
     }
 
     /**
@@ -69,7 +66,7 @@ final class Cache implements CacheInterface
      */
     public function setMultiple($values, $ttl = null): bool
     {
-        return $this->adapter->setMultiple($values, $ttl);
+        return $this->cache->setMultiple($values, $ttl);
     }
 
     /**
@@ -77,7 +74,7 @@ final class Cache implements CacheInterface
      */
     public function deleteMultiple($keys): bool
     {
-        return $this->adapter->deleteMultiple($keys);
+        return $this->cache->deleteMultiple($keys);
     }
 
     /**
@@ -85,6 +82,16 @@ final class Cache implements CacheInterface
      */
     public function has($key): bool
     {
-        return $this->adapter->has($key);
+        return $this->cache->has($key);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function increment($key, $step = 1)
+    {
+        /* The two operators below are atomically executed  because `$this->cache` is a PHP array-based cache and not a distributed cache */
+        $value = $this->cache->get($key, 0);
+        $this->cache->set($key, $value + $step);
     }
 }
