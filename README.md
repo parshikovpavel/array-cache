@@ -5,7 +5,7 @@ As cached data is only available in the current request the package should be us
 The cache implementation is compatible with [PSR-6](https://www.php-fig.org/psr/psr-6/)/[PSR-16](https://www.php-fig.org/psr/psr-16/). 
 In addition, `CounterInterface` ([excluded](https://github.com/php-fig/fig-standards/pull/847/) from PSR-16) is included in the library and used for implementation.
 
-Below the table matching the library classes with the implemented interfaces.
+The table below shows the correspondence between the library classes and the implemented interfaces.
 
 | PSR | Class | Implements |
 | --- | --- | --- |
@@ -32,9 +32,12 @@ Here are some common usage patterns of the library for testing your application 
 
 ## PSR-6
 
+According to PSR-6, the package provides `\ppCache\CacheItemPool` class (implementing the `\PSR\Cache\CacheItemPoolInterface` interface) and
+`\ppCache\CacheItem` class (implementing the `\PSR\Cache\CacheItemInterface` interface).
+
 ### Cache fixture
 
-Use `ppCache\CacheItemPool` instance as a fixture. 
+Use `\ppCache\CacheItemPool` instance as a fixture. 
 Put the creating of the cache fixture into the setUp() method.
 
 ```php
@@ -44,7 +47,7 @@ final class CacheTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->itemPool = new ppCache\CacheItemPool();
+        $this->itemPool = new \ppCache\CacheItemPool();
     }
     
     /* ... */
@@ -76,6 +79,14 @@ final class CacheTest extends TestCase
     }
 }
 ```
+
+## PSR-16
+
+According to PSR-16, the package provides `\ppCache\Cache` class (implementing the `\Psr\SimpleCache\CacheInterface` interface).
+
+### Cache fixture
+
+
 
 # Unit testing
 
