@@ -88,11 +88,13 @@ final class CountingCache implements CacheInterface, CounterInterface
     /**
      * @inheritDoc
      */
-    public function increment($key, $step = 1)
+    public function increment($key, $step = 1): int
     {
         /* The two operators below are atomically executed  because `$this->cache` is a PHP array-based cache and not a distributed cache */
         $value = $this->cache->get($key, 0);
-        $this->cache->set($key, $value + $step);
+        $newValue = $value + $step;
+        $this->cache->set($key, $newValue);
+        return $newValue;
     }
 
     /**
@@ -102,6 +104,8 @@ final class CountingCache implements CacheInterface, CounterInterface
     {
         /* The two operators below are atomically executed  because `$this->cache` is a PHP array-based cache and not a distributed cache */
         $value = $this->cache->get($key, 0);
-        $this->cache->set($key, $value - $step);
+        $newValue = $value - $step;
+        $this->cache->set($key, $newValue);
+        return $newValue;
     }
 }

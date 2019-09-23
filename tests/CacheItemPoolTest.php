@@ -5,7 +5,7 @@ namespace ppCache;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @inheritDoc
+ * CacheItemPool test cases
  */
 final class CacheItemPoolTest extends TestCase
 {

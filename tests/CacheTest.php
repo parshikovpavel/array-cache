@@ -5,7 +5,7 @@ namespace ppCache;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @inheritDoc
+ * Cache test cases
  */
 final class CacheTest extends TestCase
 {
@@ -81,16 +81,20 @@ final class CacheTest extends TestCase
         $items = [
             'key1' => 'value1',
             'key2' => 2,
-            'key3' => true
+            'key3' => true,
+            'key4' => 2.73
         ];
 
-        //TODO
+        $this->cache->setMultiple($items);
+        $this->assertSame($items, $this->cache->getMultiple(array_keys($items)));
 
-        setMultiple($values, $ttl = null);
-        getMultiple($keys, $default = null);
-        deleteMultiple($keys);
-        clear();
+        $keysToDelete = [
+            'key2',
+            'key4'
+        ];
 
+        $this->cache->deleteMultiple($keysToDelete);
+        $this->assertEquals(array_fill_keys($keysToDelete, null) + $items, $this->cache->getMultiple(array_keys($items)));
     }
 
     public function testPerformsDeletionAndClearing(): void
@@ -102,9 +106,14 @@ final class CacheTest extends TestCase
             'key4' => 3.14
         ];
 
-        //TODO
+        $this->cache->setMultiple($items);
 
+        $keyToDelete = 'key3';
+        $this->cache->delete($keyToDelete);
+        $this->assertEquals([$keyToDelete => null] + $items, $this->cache->getMultiple(array_keys($items)));
 
+        $this->cache->clear();
+        $this->assertSame(array_fill_keys(array_keys($items), null), $this->cache->getMultiple(array_keys($items)));
     }
 
 }
