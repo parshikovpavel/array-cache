@@ -79,7 +79,7 @@ final class CacheTest extends TestCase
 
 # Unit testing
 
-There are unit tests in the `./test` directory. You can run all tests with the following command:
+There are unit tests in the `./tests` directory. You can run all tests with the following command:
 
 ```bash
 $ ./vendor/bin/phpunit tests/ --testdox

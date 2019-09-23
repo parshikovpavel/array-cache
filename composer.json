@@ -14,6 +14,12 @@
         "email": "paw-p@yandex.ru"
     },
     "readme": "https://github.com/parshikovpavel/array-cache/blob/master/README.md",
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/parshikovpavel/psr-cache-adapter"
+        }
+    ],
     "require": {
         "php": "^7.1",
         "psr/cache": "^1.0",
@@ -27,11 +33,5 @@
     },
     "require-dev": {
         "phpunit/phpunit": "7"
-    },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/parshikovpavel/psr-cache-adapter"
-        }
-    ]
+    }
 }
