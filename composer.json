@@ -3,6 +3,8 @@
     "description": "Non-persistent PSR-6/PSR-16 compatible cache using an array. Useful for mocking the original cache in tests",
     "keywords": ["cache", "array", "psr-6", "psr-16", "psr6", "psr16", "mock", "mocking"],
     "homepage": "https://github.com/parshikovpavel/array-cache",
+    "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "Pavel Parshikov",
@@ -14,12 +16,6 @@
         "email": "paw-p@yandex.ru"
     },
     "readme": "https://github.com/parshikovpavel/array-cache/blob/master/README.md",
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/parshikovpavel/psr-cache-adapter"
-        }
-    ],
     "require": {
         "php": "^7.1",
         "psr/cache": "^1.0",
