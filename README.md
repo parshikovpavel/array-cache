@@ -54,29 +54,61 @@ final class CacheTest extends TestCase
 }
 ```
 
-### Get value from cache
+### Dependency injection
 
-First try to get value from cache by `$key`. 
-* If trying is successful, return `$value`
-* otherwise compute `$value` by calling the time-consuming `compute()` function and cache the
-value for a while
+If your application based on the dependency inversion principle and the dependency injection technique, it's very easy
+to replace a real cache with a mock cache. 
+
+Consider the case of constructor injection. Let's assume `Client` class provide a parameter in a constructor to inject a cache instance. 
 
 ```php
 final class CacheTest extends TestCase
 {
     /* ... */
     
-    protected function getValue(string $key): string
+    public function testFeature(): void
+    {
+        $client = new Client($this->itemPool);
+        
+        /* ... */
+    }
+}
+```
+
+### Get value from cache
+
+The most common cache use case is a getting value and computing in case of cache miss. 
+
+A cache client must first try to get value from cache by `$key`.
+ 
+* If trying is successful, return `$value`
+
+* otherwise compute `$value` by calling the time-consuming `compute()` function and cache the
+value for a while
+
+```php
+final class Client {
+
+    private $itemPool;
+
+    public function __construct(\Psr\Cache\CacheItemPoolInterface $itemPool)
+    {
+        $this->itemPool = $itemPool;
+    }
+
+    private function getValue(string $key, int $ttl = 3600): string
     {
         $item = $this->itemPool->getItem($key);
         if (!$item->isHit()) {
-            $value = compute();
+            $value = $this->compute();
             $item->set($value);
-            $item->expiresAfter(3600);
+            $item->expiresAfter($ttl);
             $this->itemPool->save($item);
         }
         return $item->get();
     }
+
+    /* ... */
 }
 ```
 
@@ -86,6 +118,68 @@ According to PSR-16, the package provides `\ppCache\Cache` class (implementing t
 
 ### Cache fixture
 
+Use `\ppCache\Cache` instance as a fixture. 
+Put the creating of the cache fixture into the setUp() method.
+
+```php
+final class CacheTest extends TestCase
+{
+    private $cache;
+
+    protected function setUp(): void
+    {
+        $this->cache = new \ppCache\Cache();
+    }
+    
+    /* ... */
+}
+```
+
+### Dependency injection
+
+Similarly, inject a cache instance into the client constructor:
+
+```php
+final class CacheTest extends TestCase
+{
+    /* ... */
+    
+    public function testFeature(): void
+    {
+        $client = new Client($this->cache);
+        
+        /* ... */
+    }
+}
+```
+
+### Get value from cache
+
+The algorithm is the same as the one for `\ppCache\CacheItemPool` but the implementation is a bit simpler.
+
+```php
+final class Client
+{
+    private $cache;
+
+    public function __construct(\Psr\SimpleCache\CacheInterface $cache)
+    {
+        $this->cache = $cache;
+    }
+
+    private function getValue(string $key, int $ttl = 3600): string
+    {
+        if (null === ($value = $this->cache->get($key))) {
+            $value = $this->compute();
+            $this->cache->set($key, $value, $ttl);
+        }
+
+        return $value;
+    }
+
+    /* ... */
+}
+```
 
 
 # Unit testing
