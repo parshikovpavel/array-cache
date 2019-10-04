@@ -96,7 +96,7 @@ final class Client {
         $this->itemPool = $itemPool;
     }
 
-    private function getValue(string $key, int $ttl = 3600): string
+    private function getValue(string $key, int $ttl = 3600)
     {
         $item = $this->itemPool->getItem($key);
         if (!$item->isHit()) {
@@ -167,7 +167,7 @@ final class Client
         $this->cache = $cache;
     }
 
-    private function getValue(string $key, int $ttl = 3600): string
+    private function getValue(string $key, int $ttl = 3600)
     {
         if (null === ($value = $this->cache->get($key))) {
             $value = $this->compute();
@@ -181,6 +181,76 @@ final class Client
 }
 ```
 
+## PSR-16 + CounterInterface
+
+The package provides the `\ppCache\CountingCache` class which implements both the `\Psr\SimpleCache\CacheInterface` 
+(introduced PSR-16) and the `CounterInterface` ([excluded](https://github.com/php-fig/fig-standards/pull/847/) from PSR-16). 
+`CounterInterface` definition is taken from [PGP-FIG repository](https://github.com/php-fig/fig-standards/pull/847/commits/30471f36bd642529ebbb728747b3a0defc3cfed5)
+and is in this package.
+
+The `\ppCache\CountingCache` implementation decorates a `\ppCache\Cache` instance and supplements its implementation with 
+atomic increment-decrement methods.
+
+### Cache fixture
+
+```php
+final class CacheTest extends TestCase
+{
+    private $countingCache;
+
+    protected function setUp(): void
+    {
+        $this->countingCache = new \ppCache\CountingCache();
+    }
+    
+    /* ... */
+}
+```
+
+### Dependency injection
+
+```php
+final class CacheTest extends TestCase
+{
+    /* ... */
+    
+    public function testFeature(): void
+    {
+        $client = new Client($this->countingCache);
+        
+        /* ... */
+    }
+}
+```
+
+### Value increment and decrement
+
+```php
+final class Client
+{
+    private $countingCache;
+
+    public function __construct(\ppCache\CountingCache $countingCache)
+    {
+        $this->countingCache = $countingCache;
+    }
+
+    private function changeValue(string $key)
+    {
+        /* ... */ 
+        
+        $newValue = $this->countingCache->increment($key);
+        
+        /* ... */
+        
+        $newValue = $this->countingCache->decrement($key);
+        
+        /* ... */
+    }
+
+    /* ... */
+}
+```
 
 # Unit testing
 
@@ -195,6 +265,18 @@ ppCache\CacheItemPool
  ✔ Saves detects retrieves an eternal item
  ✔ Detects an expired item
 
+ppCache\Cache
+ ✔ Throws exception for invalid key
+ ✔ Detects missing item
+ ✔ Saves detects retrieves an eternal item
+ ✔ Detects an expired item
+ ✔ Gets items with a specified expiration time
+ ✔ Supports multiple functions
+ ✔ Performs deletion and clearing
+
+ppCache\CountingCache
+ ✔ Increments a value1
+ ✔ Decrements a value
 ```
 
 

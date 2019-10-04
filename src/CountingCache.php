@@ -100,7 +100,7 @@ final class CountingCache implements CacheInterface, CounterInterface
     /**
      * @inheritDoc
      */
-    public function decrement($key, $step = 1)
+    public function decrement($key, $step = 1): int
     {
         /* The two operators below are atomically executed  because `$this->cache` is a PHP array-based cache and not a distributed cache */
         $value = $this->cache->get($key, 0);
