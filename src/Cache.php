@@ -10,7 +10,8 @@ use Psr\SimpleCache\CacheInterface;
 final class Cache implements CacheInterface
 {
     /**
-     * @var Psr6ToPsr16Adapter The adapter that decorates a PSR-6 pool and converts it to a PSR-16 simple cache interface
+     * @var Psr6ToPsr16Adapter The adapter that decorates a PSR-6 pool
+     * and converts it to a PSR-16 simple cache interface
      */
     private $adapter;
 

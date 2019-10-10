@@ -124,7 +124,8 @@ final class CacheItemPool implements CacheItemPoolInterface
      * Validates key of an item
      *
      * The key must consist of at least one character
-     * The following characters are reserved for future extensions and MUST NOT be supported by implementing libraries: {}()/\@:
+     * The following characters are reserved for future extensions
+     * and MUST NOT be supported by implementing libraries: {}()/\@:
      *
      * @param string $key The offered key
      * @throws InvalidArgumentException Thrown if the offered key is invalid
@@ -138,5 +139,4 @@ final class CacheItemPool implements CacheItemPoolInterface
             throw new InvalidArgumentException('Invalid key');
         }
     }
-
 }

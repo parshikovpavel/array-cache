@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 final class CountingCacheTest extends TestCase
 {
     /**
-     * @var Cache A simple cache instance
+     * @var CountingCache A counting cache instance
      */
     private $cache;
 

@@ -47,7 +47,10 @@ final class CacheTest extends TestCase
         $this->assertTrue($this->cache->has($key));
         $this->assertSame($value, $this->cache->get($key));
         $this->assertSame([$key => $value], $this->cache->getMultiple([$key]));
-        $this->assertSame([$key => $value, $missingItemKey => null], $this->cache->getMultiple([$key, $missingItemKey]));
+        $this->assertSame([
+            $key => $value,
+            $missingItemKey => null
+        ], $this->cache->getMultiple([$key, $missingItemKey]));
     }
 
     public function testDetectsAnExpiredItem(): void
@@ -94,7 +97,10 @@ final class CacheTest extends TestCase
         ];
 
         $this->cache->deleteMultiple($keysToDelete);
-        $this->assertEquals(array_fill_keys($keysToDelete, null) + $items, $this->cache->getMultiple(array_keys($items)));
+        $this->assertEquals(
+            array_fill_keys($keysToDelete, null) + $items,
+            $this->cache->getMultiple(array_keys($items))
+        );
     }
 
     public function testPerformsDeletionAndClearing(): void
@@ -115,5 +121,4 @@ final class CacheTest extends TestCase
         $this->cache->clear();
         $this->assertSame(array_fill_keys(array_keys($items), null), $this->cache->getMultiple(array_keys($items)));
     }
-
 }

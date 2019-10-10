@@ -235,7 +235,7 @@ final class Client
         $this->countingCache = $countingCache;
     }
 
-    private function changeValue(string $key)
+    private function changeValue(string $key): void
     {
         /* ... */ 
         
@@ -275,7 +275,7 @@ ppCache\Cache
  ✔ Performs deletion and clearing
 
 ppCache\CountingCache
- ✔ Increments a value1
+ ✔ Increments a value
  ✔ Decrements a value
 ```
 

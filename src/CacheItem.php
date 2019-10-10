@@ -117,10 +117,6 @@ final class CacheItem implements CacheItemInterface
      */
     public function isExpired(): bool
     {
-        if (null === $this->expiration || new DateTime() < $this->expiration) {
-            return false;
-        }
-
-        return true;
+        return null !== $this->expiration && new DateTime() > $this->expiration;
     }
 }
